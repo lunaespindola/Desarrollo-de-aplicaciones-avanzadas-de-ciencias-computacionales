@@ -1,7 +1,14 @@
 # Desarrollo-de-aplicaciones-avanzadas-de-ciencias-computacionales
 
-Apuntes de la materia :D y codigos :DD
 
-Autora: Luna Abril Gallegos Espindola
+Repository for the subject "Desarrollo-de-aplicaciones-avanzadas-de-ciencias-computacionales" including all modules 
 
-(Hecho con Obsidian.md)
+
+# Clone this repo
+
+```bash
+git clone https://github.com/lunaespindola/Desarrollo-de-aplicaciones-avanzadas-de-ciencias-computacionales.git
+```
+# Authors
+
+- [@LunaEspindola](https://github.com/lunaespindola)
