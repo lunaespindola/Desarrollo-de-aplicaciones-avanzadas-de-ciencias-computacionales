@@ -6,6 +6,8 @@ tags:
   - Introduccion
   - Lecture
   - AI
+  - Compiladores
+  - Metodos_Cuantitativos
 ---
 
 Modelo = Es una herramienta
