@@ -1,0 +1,1 @@
+The similarity score between FID-01.txt and SCRAMBLED-01.txt is 0.9999999999999988

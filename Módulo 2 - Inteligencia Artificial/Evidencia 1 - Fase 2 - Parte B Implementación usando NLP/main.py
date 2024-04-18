@@ -1,7 +1,8 @@
 '''
-    @Author: @Lunaespindola
-    @Date: 2024/04/16
-    @Description: This is the code to check plagiarism in a text file or multiple text files and returns a brief on a txt.
+    @author: @Lunaespindola
+    @date: 2024/04/16
+    @description:
+        This is the code to check plagiarism in a text file or multiple text files and returns a brief on a txt.
 '''
 
 # Importing the necessary libraries
@@ -18,12 +19,13 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+import tkinter as tk
+from tkinter import filedialog
 
 # Downloading the necessary resources
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
-
 
 # Function to read the text files
 def read_files(file_path):
@@ -160,42 +162,7 @@ def check_plagiarism(file1, file2, method='cosine'):
     
     return similarity[0][1]
 
-# Function to plot the similarity score
-def plot_similarity_score(similarity_scores):
-    '''
-    Function to plot the similarity score
-
-    Args:
-        similarity_scores (list): The list of similarity scores
-    '''
-    plt.plot(similarity_scores)
-    plt.xlabel('File Pair')
-    plt.ylabel('Similarity Score')
-    plt.title('Similarity Score of File Pairs')
-    plt.xticks(ticks=range(len(similarity_scores)))
-    plt.grid()
-    plt.tight_layout()
-    plt.savefig('similarity_score.png')
-    plt.show()
-    
-# Function to check plagiarism in a directory
-def check_plagiarism_directory(directory, method='cosine'):
-    '''
-    Function to check plagiarism in a directory
-
-    Args:
-        directory (str): The path of the directory
-        method (str): The method to be used for checking plagiarism, default is 'cosine'
-    '''
-    files = os.listdir(directory)
-    similarity_scores = []
-    for i in range(len(files)):
-        for j in range(i+1, len(files)):
-            file1 = os.path.join(directory, files[i])
-            file2 = os.path.join(directory, files[j])
-            similarity = check_plagiarism(file1, file2, method)
-            similarity_scores.append(similarity)
-    plot_similarity_score(similarity_scores)
+# ------------------------------------------- Functions to check plagiarism -------------------------------------------
     
 # Functipn to check plagiarism from one file to multiple files
 def check_plagiarism_file_to_files(file, files, method='cosine'):
@@ -211,7 +178,7 @@ def check_plagiarism_file_to_files(file, files, method='cosine'):
     for f in files:
         similarity = check_plagiarism(file, f, method)
         similarity_scores.append(similarity)
-    plot_similarity_score(similarity_scores)
+    return similarity_scores
     
 # Function to check plagiarism from multiple files to multiple files
 def check_plagiarism_files_to_files(files1, files2, method='cosine'):
@@ -228,88 +195,332 @@ def check_plagiarism_files_to_files(files1, files2, method='cosine'):
         for f2 in files2:
             similarity = check_plagiarism(f1, f2, method)
             similarity_scores.append(similarity)
-    plot_similarity_score(similarity_scores)
+    return similarity_scores
     
-# Function to check plagiarism in a directory and write the results to a file
-def check_plagiarism_directory_to_file(directory, method='cosine'):
+# Function to check plagiarism in a directory and return similarity scores and true labels
+def check_plagiarism_directory(directory, threshold=0.7):
     '''
-    Function to check plagiarism in a directory and write the results to a file
+    Function to check plagiarism in a directory and return similarity scores and true labels
 
     Args:
         directory (str): The path of the directory
-        method (str): The method to be used for checking plagiarism, default is 'cosine'
+        threshold (float): The threshold for considering a pair as plagiarized
+
+    Returns:
+        list: The similarity scores
+        list: The true labels
     '''
     files = os.listdir(directory)
     similarity_scores = []
-    with open('results.txt', 'w') as file:
-        for i in range(len(files)):
-            for j in range(i+1, len(files)):
-                file1 = os.path.join(directory, files[i])
-                file2 = os.path.join(directory, files[j])
-                similarity = check_plagiarism(file1, file2, method)
-                similarity_scores.append(similarity)
-                file.write(f'The similarity score between {files[i]} and {files[j]} is {similarity}\n')
-    plot_similarity_score(similarity_scores)
-    
-# Main function
-def main():
-    '''
-    Main function
-    '''
-    # # Checking the number of arguments
-    # if len(sys.argv) < 2:
-    #     print('Usage: python main.py <file_path>')
-    #     sys.exit(1)
-    
-    # # Checking if the file exists
-    # file_path = sys.argv[1]
-    # if not os.path.exists(file_path):
-    #     print('The file does not exist')
-    #     sys.exit(1)
-    
-    directory = 'Resumen Texto Otros'
-        
-    file_path_1 = 'Resumen Texto Otros/FID-01.txt'
-    file_path_2 = 'Resumen Texto Otros/FID-02.txt'
-    file_path_3 = 'Resumen Texto Otros/FID-03.txt'
-    file_path_4 = 'Resumen Texto Otros/FID-04.txt'
-    file_path_5 = 'Resumen Texto Otros/FID-05.txt'
-    file_path_6 = 'Resumen Texto Otros/FID-06.txt'
-    file_path_7 = 'Resumen Texto Otros/FID-07.txt'
-    file_path_8 = 'Resumen Texto Otros/FID-08.txt'
-    file_path_9 = 'Resumen Texto Otros/FID-09.txt'
-    file_path_10 = 'Resumen Texto Otros/FID-10.txt'
-    
-    # Get file names
-    name1 = os.path.basename(file_path_1)
-    name2 = os.path.basename(file_path_2)
-    name3 = os.path.basename(file_path_3)
-    name4 = os.path.basename(file_path_4)
-    name5 = os.path.basename(file_path_5)
-    name6 = os.path.basename(file_path_6)
-    name7 = os.path.basename(file_path_7)
-    name8 = os.path.basename(file_path_8)
-    name9 = os.path.basename(file_path_9)
-    name10 = os.path.basename(file_path_10)
-    
-    # Reading the file
-    file1 = read_files(file_path_1)
-    file2 = read_files(file_path_2)
-    
-    # Checking plagiarism
-    similarity = check_plagiarism(file_path_1, file_path_2)
-    print(f'The similarity score between {name1} and {name2} is {similarity}')
-    
-    # Checking plagiarism from one file to multiple files
-    check_plagiarism_file_to_files(file_path_1, [file_path_2, file_path_3, file_path_4, file_path_5, file_path_6, file_path_7, file_path_8, file_path_9, file_path_10])
-    
-    # Checking plagiarism in a directory
-    check_plagiarism_directory(directory)
-    
-    # Checking plagiarism in a directory and writing the results to a file
-    check_plagiarism_directory_to_file(directory)
-    
+    true_labels = []
+    files_1 = []
+    files_2 = []
+    for i in range(len(files)):
+        for j in range(i+1, len(files)):
+            file1 = os.path.join(directory, files[i])
+            file2 = os.path.join(directory, files[j])
+            similarity = check_plagiarism(file1, file2)
+            similarity_scores.append(similarity)
+            # Assuming you have a labeled dataset indicating whether each pair is plagiarized or not
+            # Here, you need to replace this with your actual dataset
+            true_label = 1 if files[i] == files[j] else 0  # Assuming plagiarism occurs if file names are the same
+            true_labels.append(true_label)
+            files_1.append(files[i])
+            files_2.append(files[j]) 
+            
+    return similarity_scores, true_labels , files_1, files_2
 
-# Checking if the script is run as the main script
+# Function to select file
+def select_file():
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename()
+    root.destroy()  # Destroy the tkinter window after file selection
+    return file_path
+
+# Function to select directory
+def select_directory():
+    root = tk.Tk()
+    root.withdraw()
+    directory = filedialog.askdirectory()
+    root.destroy()  # Destroy the tkinter window after directory selection
+    return directory
+
+# ------------------------------------------- Functions to check the acuracity -------------------------------------------
+
+# Function to check the accuracy
+def check_accuracy(similarity_scores, true_labels, threshold=0.7):
+    '''
+    Function to check the accuracy
+
+    Args:
+        similarity_scores (list): The similarity scores
+        true_labels (list): The true labels
+        threshold (float): The threshold for considering a pair as plagiarized
+
+    Returns:
+        float: The accuracy
+    '''
+    predictions = [1 if score > threshold else 0 for score in similarity_scores]
+    accuracy = sklearn.metrics.accuracy_score(true_labels, predictions)
+    return accuracy
+
+# ------------------------------------------- Functions to get the y_pred and y_true -------------------------------------------
+
+# Function to get the y_pred and y_true
+def get_y_pred_y_true(similarity_scores, threshold=0.7):
+    '''
+    Function to get the y_pred and y_true
+
+    Args:
+        similarity_scores (list): The similarity scores
+        threshold (float): The threshold for considering a pair as plagiarized
+
+    Returns:
+        list: The predicted labels
+        list: The true labels
+    '''
+    y_pred = [1 if score > threshold else 0 for score in similarity_scores]
+    y_true = [1 if score > threshold else 0 for score in similarity_scores]
+    return y_pred, y_true
+
+# ------------------------------------------- Functions to get the performance metrics -------------------------------------------
+
+# Function to get the performance metrics
+def get_performance_metrics(y_true, y_pred):
+    '''
+    Function to get the performance metrics
+
+    Args:
+        y_true (list): The true labels
+        y_pred (list): The predicted labels
+
+    Returns:
+        float: The AUC
+        list: The confusion matrix
+        float: The true positive rate
+        float: The false positive rate
+        float: The false negative rate
+        float: The true negative rate
+    '''
+    # Check Class Distribution
+    unique_classes = set(y_true)
+    if len(unique_classes) < 2:
+        raise ValueError("There should be at least two unique classes in y_true.")
+
+    # Inspect Data
+    print("Unique classes in y_true:", unique_classes)
+
+    # Handle Imbalanced Data (if necessary)
+
+    # Verify Function Inputs
+    print("Length of y_true:", len(y_true))
+    print("Length of y_pred:", len(y_pred))
+    
+    auc = sklearn.metrics.roc_auc_score(y_true, y_pred)
+    cm = sklearn.metrics.confusion_matrix(y_true, y_pred)
+    tn, fp, fn, tp = cm.ravel()
+    tpr = tp / (tp + fn)
+    fpr = fp / (fp + tn)
+    fnr = fn / (fn + tp)
+    tnr = tn / (tn + fp)
+    return auc, cm, tpr, fpr, fnr, tnr
+
+# ------------------------------------------- Functions to write the results to a file -------------------------------------------
+
+# Function to write the results to a file
+def write_results_to_file(file_path, results):
+    '''
+    Function to write the results to a file
+
+    Args:
+        file_path (str): The path of the file
+        results (dict): The results to be written to the file
+    '''
+    with open(file_path, 'w') as file:
+        for key, value in results.items():
+            file.write(f'{key}: {value}\n')
+            
+# ------------------------------------------- Functions to plot the results -------------------------------------------
+
+# Function to plot the results
+def plot_results(y_true, y_pred, similarity_scores):
+    '''
+    Function to plot the results
+
+    Args:
+        y_true (list): The true labels
+        y_pred (list): The predicted labels
+        similarity_scores (list): The similarity scores
+    '''
+    # Plotting the AUC-ROC curve
+    fpr, tpr, _ = sklearn.metrics.roc_curve(y_true, y_pred)
+    auc = sklearn.metrics.auc(fpr, tpr)
+
+    # Plotting the confusion matrix
+    cm = sklearn.metrics.confusion_matrix(y_true, y_pred)
+
+    # Creating a figure and subplots
+    fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+
+    # ROC Curve
+    axs[0, 0].plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % auc)
+    axs[0, 0].plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    axs[0, 0].set_xlabel('False Positive Rate')
+    axs[0, 0].set_ylabel('True Positive Rate')
+    axs[0, 0].set_title('Receiver Operating Characteristic (ROC) Curve')
+    axs[0, 0].legend(loc='lower right')
+
+    # Confusion Matrix
+    axs[0, 1].matshow(cm, cmap='Blues')
+    axs[0, 1].colorbar()
+    axs[0, 1].set_xlabel('Predicted')
+    axs[0, 1].set_ylabel('True')
+    axs[0, 1].set_title('Confusion Matrix')
+
+    # Similarity Scores Histogram
+    axs[1, 0].hist(similarity_scores, bins=10, color='skyblue', edgecolor='black')
+    axs[1, 0].set_xlabel('Similarity Scores')
+    axs[1, 0].set_ylabel('Frequency')
+    axs[1, 0].set_title('Histogram of Similarity Scores')
+
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+
+    # Show the plots
+    plt.show()
+
+# ------------------------------------------- Functions to select files and function -------------------------------------------
+
+# Function to select files
+def select_files():
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+
+    file_paths = filedialog.askopenfilenames(
+        title="Select Files", 
+        filetypes=(("Text files", "*.txt"), ("All files", "*.*"))
+    )
+
+    root.destroy()  # Destroy the root window after file selection
+
+    return file_paths
+# Function to select wich function to use
+def select_function():
+    '''
+    Function to select wich function to use
+    '''
+    print('Select the function you want to use:')
+    print('1. Check plagiarism between two files')
+    print('2. Check plagiarism in a directory')
+    print('3. Check plagiarism from one file to multiple files')
+    print('4. Check plagiarism from multiple files to multiple files')
+    print('5. Check plagiarism in a directory and return similarity scores and true labels')
+    try :
+        choice = int(input('Enter your choice: '))
+    except ValueError:
+        print('Only numbers from 1 to 5 are allowed as input')
+        sys.exit(1)
+        
+    if choice == 1:
+        file1 = select_file()
+        file2 = select_file()
+        similarity = check_plagiarism(file1, file2)
+        accuracy = check_accuracy([similarity], [1])
+        y_pred, y_true = get_y_pred_y_true([similarity], 0.5)
+        print(y_pred, y_true)
+        auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
+        results = {
+            'Similarity': similarity,
+            'Accuracy': accuracy,
+            'AUC': auc,
+            'True Positive Rate': tpr,
+            'False Positive Rate': fpr,
+            'False Negative Rate': fnr,
+            'True Negative Rate': tnr
+        }
+        write_results_to_file('Results.txt', results)
+        plot_results(y_true, y_pred, [similarity])
+
+    elif choice == 2:
+        directory = select_directory()
+        similarity_scores, true_labels, files_1, files_2 = check_plagiarism_directory(directory)
+        print(true_labels)
+        accuracy = check_accuracy(similarity_scores, true_labels)
+        y_pred, y_true = get_y_pred_y_true(similarity_scores)
+        auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
+        results = {
+            'Accuracy': accuracy,
+            'AUC': auc,
+            'True Positive Rate': tpr,
+            'False Positive Rate': fpr,
+            'False Negative Rate': fnr,
+            'True Negative Rate': tnr
+        }
+        write_results_to_file('Results.txt', results)
+        plot_results(y_true, y_pred, similarity_scores)
+
+    elif choice == 3:
+        file_path = select_file()
+        files_path = select_files() 
+        similarity_scores = check_plagiarism_file_to_files(file_path, files_path)
+        accuracy = check_accuracy(similarity_scores, [1]*len(similarity_scores))
+        y_pred, y_true = get_y_pred_y_true(similarity_scores, 0.5)
+        auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
+        results = {
+            'Accuracy': accuracy,
+            'AUC': auc,
+            'True Positive Rate': tpr,
+            'False Positive Rate': fpr,
+            'False Negative Rate': fnr,
+            'True Negative Rate': tnr
+        }
+        write_results_to_file('Results.txt', results)
+        plot_results(y_true, y_pred, similarity_scores)
+
+    elif choice == 4:
+        files1 = select_files()
+        files2 = select_files()
+        similarity_scores = check_plagiarism_files_to_files(files1, files2)
+        accuracy = check_accuracy(similarity_scores, [1]*len(similarity_scores))
+        y_pred, y_true = get_y_pred_y_true(similarity_scores, 0.5)
+        auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
+        results = {
+            'Accuracy': accuracy,
+            'AUC': auc,
+            'True Positive Rate': tpr,
+            'False Positive Rate': fpr,
+            'False Negative Rate': fnr,
+            'True Negative Rate': tnr
+        }
+        write_results_to_file('Results.txt', results)
+        plot_results(y_true, y_pred, similarity_scores)
+
+    elif choice == 5:
+        directory = select_directory()
+        print(directory)
+        similarity_scores, true_labels, files_1, files_2 = check_plagiarism_directory(directory)
+        accuracy = check_accuracy(similarity_scores, true_labels)
+        y_pred, y_true = get_y_pred_y_true(similarity_scores)
+        auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
+        results = {
+            'Accuracy': accuracy,
+            'AUC': auc,
+            'True Positive Rate': tpr,
+            'False Positive Rate': fpr,
+            'False Negative Rate': fnr,
+            'True Negative Rate': tnr
+        }
+        write_results_to_file('Results.txt', results)
+        plot_results(y_true, y_pred, similarity_scores)
+        
+    else:
+        print('Only numbers from 1 to 5 are allowed as input')
+
+# ------------------------------------------- Main function -------------------------------------------
+
+def main():
+    select_function()
+
 if __name__ == '__main__':
     main()
