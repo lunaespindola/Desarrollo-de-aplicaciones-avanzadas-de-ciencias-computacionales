@@ -303,10 +303,12 @@ def get_performance_metrics(y_true, y_pred):
         float: The false negative rate
         float: The true negative rate
     '''
-    # Check Class Distribution
+    # Check if y_true contains at least two unique classes
     unique_classes = set(y_true)
     if len(unique_classes) < 2:
-        raise ValueError("There should be at least two unique classes in y_true.")
+        # If not, return default values and print a warning message
+        print("Warning: There should be at least two unique classes in y_true.")
+        return 0.5, [[0, 0], [0, 0]], 0.0, 0.0, 0.0, 0.0
 
     # Inspect Data
     print("Unique classes in y_true:", unique_classes)
@@ -372,8 +374,9 @@ def plot_results(y_true, y_pred, similarity_scores):
     axs[0, 0].legend(loc='lower right')
 
     # Confusion Matrix
-    axs[0, 1].matshow(cm, cmap='Blues')
-    axs[0, 1].colorbar()
+    im = axs[0, 1].imshow(cm, cmap='Blues')
+    fig.colorbar(im, ax=axs[0, 1])  # Add color bar
+
     axs[0, 1].set_xlabel('Predicted')
     axs[0, 1].set_ylabel('True')
     axs[0, 1].set_title('Confusion Matrix')
@@ -388,7 +391,7 @@ def plot_results(y_true, y_pred, similarity_scores):
     plt.tight_layout()
 
     # Show the plots
-    plt.show()
+    plt.show()  
 
 # ------------------------------------------- Functions to select files and function -------------------------------------------
 

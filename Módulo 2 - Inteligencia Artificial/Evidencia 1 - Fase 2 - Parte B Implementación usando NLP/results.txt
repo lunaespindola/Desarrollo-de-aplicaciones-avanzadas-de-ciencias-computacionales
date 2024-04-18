@@ -1,2 +1,7 @@
-Confusion Matrix
-[[45]]
+Similarity: 0.021554026870452114
+Accuracy: 0.0
+AUC: 0.5
+True Positive Rate: 0.0
+False Positive Rate: 0.0
+False Negative Rate: 0.0
+True Negative Rate: 0.0
