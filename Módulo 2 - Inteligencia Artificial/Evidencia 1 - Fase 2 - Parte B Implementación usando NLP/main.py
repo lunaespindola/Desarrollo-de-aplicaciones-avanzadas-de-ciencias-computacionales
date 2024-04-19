@@ -9,11 +9,11 @@
 import os
 import sys
 import re
-import string
 import numpy as np
 import sklearn
 from sklearn.feature_extraction.text import CountVectorizer
 import matplotlib.pyplot as plt
+import numpy as np
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -345,7 +345,7 @@ def write_results_to_file(file_path, results):
             
 # ------------------------------------------- Functions to plot the results -------------------------------------------
 
-# Function to plot the results
+
 def plot_results(y_true, y_pred, similarity_scores):
     '''
     Function to plot the results
@@ -355,43 +355,42 @@ def plot_results(y_true, y_pred, similarity_scores):
         y_pred (list): The predicted labels
         similarity_scores (list): The similarity scores
     '''
-    # Plotting the AUC-ROC curve
-    fpr, tpr, _ = sklearn.metrics.roc_curve(y_true, y_pred)
-    auc = sklearn.metrics.auc(fpr, tpr)
+    # Print out unique values in y_true and y_pred
+    print("Unique values in y_true:", set(y_true))
+    print("Unique values in y_pred:", set(y_pred))
 
-    # Plotting the confusion matrix
-    cm = sklearn.metrics.confusion_matrix(y_true, y_pred)
+    # Print out confusion matrix if there are two unique classes
+    if len(set(y_true)) > 1:
+        print("Confusion matrix:")
+        print(sklearn.metrics.confusion_matrix(y_true, y_pred))
+    else:
+        print("Cannot generate a meaningful confusion matrix due to the lack of diversity in the true labels.")
 
-    # Creating a figure and subplots
-    fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+    # Plotting the AUC-ROC curve if there is variability in predictions
+    if len(set(y_pred)) > 1:
+        # Compute ROC curve and AUC if there is variability in predictions
+        fpr, tpr, _ = sklearn.metrics.roc_curve(y_true, y_pred)
+        auc = sklearn.metrics.auc(fpr, tpr)
 
-    # ROC Curve
-    axs[0, 0].plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % auc)
-    axs[0, 0].plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-    axs[0, 0].set_xlabel('False Positive Rate')
-    axs[0, 0].set_ylabel('True Positive Rate')
-    axs[0, 0].set_title('Receiver Operating Characteristic (ROC) Curve')
-    axs[0, 0].legend(loc='lower right')
-
-    # Confusion Matrix
-    im = axs[0, 1].imshow(cm, cmap='Blues')
-    fig.colorbar(im, ax=axs[0, 1])  # Add color bar
-
-    axs[0, 1].set_xlabel('Predicted')
-    axs[0, 1].set_ylabel('True')
-    axs[0, 1].set_title('Confusion Matrix')
+        # Plotting the ROC curve
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % auc)
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver Operating Characteristic (ROC) Curve')
+        plt.legend(loc='lower right')
+        plt.show()
+    else:
+        print("Cannot generate a meaningful ROC curve due to the lack of variability in predictions.")
 
     # Similarity Scores Histogram
-    axs[1, 0].hist(similarity_scores, bins=10, color='skyblue', edgecolor='black')
-    axs[1, 0].set_xlabel('Similarity Scores')
-    axs[1, 0].set_ylabel('Frequency')
-    axs[1, 0].set_title('Histogram of Similarity Scores')
+    plt.hist(similarity_scores, bins=10, color='skyblue', edgecolor='black')
+    plt.xlabel('Similarity Scores')
+    plt.ylabel('Frequency')
+    plt.title('Histogram of Similarity Scores')
+    plt.show()
 
-    # Adjust layout to prevent overlap
-    plt.tight_layout()
-
-    # Show the plots
-    plt.show()  
+  
 
 # ------------------------------------------- Functions to select files and function -------------------------------------------
 
@@ -434,7 +433,7 @@ def select_function():
         print(y_pred, y_true)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
         results = {
-            'Similarity': similarity,
+            'Similarity Score': similarity,
             'Accuracy': accuracy,
             'AUC': auc,
             'True Positive Rate': tpr,
@@ -453,6 +452,7 @@ def select_function():
         y_pred, y_true = get_y_pred_y_true(similarity_scores)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
         results = {
+            'Similarity Scores': similarity_scores,
             'Accuracy': accuracy,
             'AUC': auc,
             'True Positive Rate': tpr,
@@ -471,6 +471,7 @@ def select_function():
         y_pred, y_true = get_y_pred_y_true(similarity_scores, 0.5)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
         results = {
+            'Similarity Scores': similarity_scores,
             'Accuracy': accuracy,
             'AUC': auc,
             'True Positive Rate': tpr,
@@ -489,6 +490,7 @@ def select_function():
         y_pred, y_true = get_y_pred_y_true(similarity_scores, 0.5)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
         results = {
+            'Similarity Scores': similarity_scores,
             'Accuracy': accuracy,
             'AUC': auc,
             'True Positive Rate': tpr,
@@ -507,6 +509,7 @@ def select_function():
         y_pred, y_true = get_y_pred_y_true(similarity_scores)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
         results = {
+            'Similarity Scores': similarity_scores,
             'Accuracy': accuracy,
             'AUC': auc,
             'True Positive Rate': tpr,
