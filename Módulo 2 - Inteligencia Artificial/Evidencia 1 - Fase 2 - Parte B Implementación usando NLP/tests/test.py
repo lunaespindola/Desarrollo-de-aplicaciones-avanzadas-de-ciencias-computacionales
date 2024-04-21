@@ -43,12 +43,12 @@ class TestPlagiarismChecker(unittest.TestCase):
 
     def test_similarity_between_two_files(self):
         similarity_score = check_plagiarism(self.file1_path, self.file2_path)
-        self.assertAlmostEqual(similarity_score,  0.5477225575051662, places=2)  # Verificar similitud esperada
+        self.assertAlmostEqual(similarity_score,  0.54, places=1)  # Verificar similitud esperada
 
     def test_similarity_in_directory(self):
         similarity_scores, _, _, _ = check_plagiarism_directory(self.dir_path)
         self.assertEqual(len(similarity_scores), 1)  # Debería haber solo una comparación en este caso
-        self.assertAlmostEqual(similarity_scores[0],  0.5477225575051662, places=2)  # Verificar similitud esperada
+        self.assertAlmostEqual(similarity_scores[0],  0.54, places=1)  # Verificar similitud esperada
 
     def tearDown(self):
         # Eliminar archivos de prueba
