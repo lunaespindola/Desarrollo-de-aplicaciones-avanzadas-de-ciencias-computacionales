@@ -1,2 +1,4 @@
 202411-tc3002b.201/
 __pycache__/
+__pycache__
+.pytest_cache/
