@@ -306,18 +306,9 @@ def get_performance_metrics(y_true, y_pred):
     # Check if y_true contains at least two unique classes
     unique_classes = set(y_true)
     if len(unique_classes) < 2:
-        # If not, return default values and print a warning message
+        # If not, return default values and      a warning message
         print("Warning: There should be at least two unique classes in y_true.")
         return 0.5, [[0, 0], [0, 0]], 0.0, 0.0, 0.0, 0.0
-
-    # Inspect Data
-    print("Unique classes in y_true:", unique_classes)
-
-    # Handle Imbalanced Data (if necessary)
-
-    # Verify Function Inputs
-    print("Length of y_true:", len(y_true))
-    print("Length of y_pred:", len(y_pred))
     
     auc = sklearn.metrics.roc_auc_score(y_true, y_pred)
     cm = sklearn.metrics.confusion_matrix(y_true, y_pred)
@@ -355,14 +346,11 @@ def plot_results(y_true, y_pred, similarity_scores):
         y_pred (list): The predicted labels
         similarity_scores (list): The similarity scores
     '''
-    # Print out unique values in y_true and y_pred
-    print("Unique values in y_true:", set(y_true))
-    print("Unique values in y_pred:", set(y_pred))
-
     # Print out confusion matrix if there are two unique classes
     if len(set(y_true)) > 1:
-        print("Confusion matrix:")
-        print(sklearn.metrics.confusion_matrix(y_true, y_pred))
+        cm = sklearn.metrics.confusion_matrix(y_true, y_pred)
+        print("Confusion Matrix:")
+        print(cm)
     else:
         print("Cannot generate a meaningful confusion matrix due to the lack of diversity in the true labels.")
 
@@ -389,6 +377,8 @@ def plot_results(y_true, y_pred, similarity_scores):
     plt.ylabel('Frequency')
     plt.title('Histogram of Similarity Scores')
     plt.show()
+    
+    return
 
   
 
@@ -430,7 +420,6 @@ def select_function():
         similarity = check_plagiarism(file1, file2)
         accuracy = check_accuracy([similarity], [1])
         y_pred, y_true = get_y_pred_y_true([similarity], 0.5)
-        print(y_pred, y_true)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
         results = {
             'Similarity Score': similarity,
@@ -439,7 +428,8 @@ def select_function():
             'True Positive Rate': tpr,
             'False Positive Rate': fpr,
             'False Negative Rate': fnr,
-            'True Negative Rate': tnr
+            'True Negative Rate': tnr,
+            'Confusion Matrix': 'Not available for single pair comparison'
         }
         write_results_to_file('Results.txt', results)
         plot_results(y_true, y_pred, [similarity])
@@ -447,7 +437,6 @@ def select_function():
     elif choice == 2:
         directory = select_directory()
         similarity_scores, true_labels, files_1, files_2 = check_plagiarism_directory(directory)
-        print(true_labels)
         accuracy = check_accuracy(similarity_scores, true_labels)
         y_pred, y_true = get_y_pred_y_true(similarity_scores)
         auc, cm, tpr, fpr, fnr, tnr = get_performance_metrics(y_true, y_pred)
@@ -458,7 +447,8 @@ def select_function():
             'True Positive Rate': tpr,
             'False Positive Rate': fpr,
             'False Negative Rate': fnr,
-            'True Negative Rate': tnr
+            'True Negative Rate': tnr,
+            'Confusion Matrix': cm
         }
         write_results_to_file('Results.txt', results)
         plot_results(y_true, y_pred, similarity_scores)
@@ -477,7 +467,9 @@ def select_function():
             'True Positive Rate': tpr,
             'False Positive Rate': fpr,
             'False Negative Rate': fnr,
-            'True Negative Rate': tnr
+            'True Negative Rate': tnr,
+            'Confusion Matrix': cm
+            
         }
         write_results_to_file('Results.txt', results)
         plot_results(y_true, y_pred, similarity_scores)
@@ -496,14 +488,14 @@ def select_function():
             'True Positive Rate': tpr,
             'False Positive Rate': fpr,
             'False Negative Rate': fnr,
-            'True Negative Rate': tnr
+            'True Negative Rate': tnr,
+            'Confusion Matrix': cm
         }
         write_results_to_file('Results.txt', results)
         plot_results(y_true, y_pred, similarity_scores)
 
     elif choice == 5:
         directory = select_directory()
-        print(directory)
         similarity_scores, true_labels, files_1, files_2 = check_plagiarism_directory(directory)
         accuracy = check_accuracy(similarity_scores, true_labels)
         y_pred, y_true = get_y_pred_y_true(similarity_scores)
@@ -515,7 +507,8 @@ def select_function():
             'True Positive Rate': tpr,
             'False Positive Rate': fpr,
             'False Negative Rate': fnr,
-            'True Negative Rate': tnr
+            'True Negative Rate': tnr,
+            'Confusion Matrix': cm
         }
         write_results_to_file('Results.txt', results)
         plot_results(y_true, y_pred, similarity_scores)
