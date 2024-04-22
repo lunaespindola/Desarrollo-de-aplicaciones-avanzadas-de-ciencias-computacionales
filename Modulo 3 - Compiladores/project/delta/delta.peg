@@ -1,3 +1,12 @@
-progam = expresion EOF
-expresion = decimal
+program = expression EOF
+expression = additive / comparison
+additive = multiplicative (( '+' / '-' ) multiplicative )*
+multiplicative = primary (( '*' / '/' ) primary )*
+comparison = primary (
+    ( '==' / '!=' / '>=' / '>' / '<=' / '<' ) primary
+)*
+primary = decimal / binary / octal / hexadecimal / '(' expression ')'
 decimal = r'\d+'
+binary = r'#b[01]+'
+octal = r'#o[0-7]+'
+hexadecimal = r'#x[0-9a-fA-F]+'
