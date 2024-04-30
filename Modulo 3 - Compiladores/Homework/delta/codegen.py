@@ -37,12 +37,22 @@ class CodeGenerationVisitor(PTNodeVisitor):
 
     def visit_if(self, node, children):
         result = (children[0]
-                  + '    if\n'
-                  + children[1])
-        if len(children) == 3:
-            result += ('    else\n'
-                       + children[2])
-        result += '    end\n'
+                + '    if\n'
+                + children[1])
+        count_ends = 1
+        last_else = not(len(children) % 2 == 0)
+        until = len(children) + (-1 if last_else else 0)
+        if last_else:
+            result += '    else\n'
+        for i in range(2, until, 2):
+            result += (children[i]
+                    + '    if\n'
+                    + children[i+1]
+                    +'    else\n')
+            count_ends += 1
+        if last_else:
+            result += children[-1]
+        result += '    end\n' * count_ends
         return result
 
     def visit_while(self, node, children):
@@ -149,15 +159,15 @@ class CodeGenerationVisitor(PTNodeVisitor):
     
     def visit_do_while(self, node, children):
         return (
-            '    block\n'  # Outer block to enable exit from the loop
-            + '    loop\n'  # Loop start
-            + children[0]  # Execute the loop body first
-            + children[1]  # Condition expression
-            + '    i32.eqz\n'  # Check if the expression is zero (false)
-            + '    br_if 1\n'  # Break out of loop if condition is false
-            + '    br 0\n'  # Continue loop
-            + '    end\n'  # End loop
-            + '    end\n'  # End block
+            '    block\n'  
+            + '    loop\n' 
+            + children[0]  
+            + children[1]  
+            + '    i32.eqz\n'  
+            + '    br_if 1\n'  
+            + '    br 0\n'  
+            + '    end\n'  
+            + '    end\n'  
         )
 
     def visit_decimal(self, node, children):
