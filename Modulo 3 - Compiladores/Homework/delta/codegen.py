@@ -63,19 +63,30 @@ class CodeGenerationVisitor(PTNodeVisitor):
     def visit_lhs_variable(self, node, children):
         name = node.value
         return f'    local.set ${name}\n'
-    
+
     def visit_expression(self, node, children):
+        if len(children) == 1:
+            return children[0]
         result = [children[0]]
-        for i in range(1, len(children), 2):
-            if children[i] in {'+', '-', '*', '/', '%'}:
-                result.append(f' {children[i]} ')  # Add spaces around the operator
-            else:
-                result.append(' ')  # Add space before non-operator elements
-                result.append(children[i])  # Operand
-                result.append(' ')  # Add space after non-operator elements
+        for exp in children[1:]:
+            result.append('    if (result i32)\n')
+            result.append(exp)
+        result.append('    i32.eqz\n' * 2)
+        result.append('    else\n'
+                      '    i32.const 0\n'
+                      '    end\n' * (len(children) - 1))
         return ''.join(result)
 
-
+    def visit_additive(self, node, children):
+        result = [children[0]]
+        for i in range(1, len(children), 2):
+            result.append(children[i + 1])
+            match children[i]:
+                case '+':
+                    result.append('    i32.add\n')
+                case '-':
+                    result.append('    i32.sub\n')
+        return ''.join(result)
 
     def visit_multiplicative(self, node, children):
         result = [children[0]]
@@ -98,6 +109,31 @@ class CodeGenerationVisitor(PTNodeVisitor):
             return '    i32.const 1\n'
         else:
             return '    i32.const 0\n'
+    
+    def visit_binary(self, node, children):
+        node.value = int(node.value[2:], 2)
+        return f'    i32.const {node.value}\n'
+
+    def visit_octal(self, node, children):
+        node.value = int(node.value[2:], 8)
+        return f'    i32.const { node.value }\n'
+    
+    def visit_hexadecimal(self, node, children):
+        node.value = int(node.value[2:], 16)
+        return f'    i32.const { node.value }\n'
+    
+    def visit_comparison(self, node, children):
+        left, op, right = children
+        result = (left
+                  + right
+                  + '    i32.eq\n' * (op == '==')
+                  + '    i32.ne\n' * (op == '!=')
+                  + '    i32.lt_s\n' * (op == '<')
+                  + '    i32.gt_s\n' * (op == '>')
+                  + '    i32.le_s\n' * (op == '<=')
+                  + '    i32.ge_s\n' * (op == '>=')
+                  )
+        return result
 
     def visit_parenthesis(self, node, children):
         return children[0]
@@ -121,33 +157,3 @@ class CodeGenerationVisitor(PTNodeVisitor):
     def visit_rhs_variable(self, node, children):
         name = node.value
         return f'    local.get ${name}\n'
-
-    def visit_decimal(self, node, children):
-        return f'i32.const {node.value}'
-
-    def visit_binary(self, node, children):
-        return f'i32.const {int(node.value[2:], 2)}'
-
-    def visit_octal(self, node, children):
-        return f'i32.const {int(node.value[2:], 8)}'
-
-    def visit_hexadecimal(self, node, children):
-        return f'i32.const {int(node.value[2:], 16)}'
-
-    def visit_equal(self, node, children):
-        return '    i32.eq\n'
-
-    def visit_not_equal(self, node, children):
-        return '    i32.ne\n'
-
-    def visit_greater_equal(self, node, children):
-        return '    i32.ge_s\n'
-
-    def visit_greater_than(self, node, children):
-        return '    i32.gt_s\n'
-
-    def visit_less_equal(self, node, children):
-        return '    i32.le_s\n'
-
-    def visit_less_than(self, node, children):
-        return '    i32.lt_s\n'

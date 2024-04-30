@@ -12,9 +12,10 @@ def call_wasm_fun(file_name, fn_name, *args):
 
 
 def main():
-    print(call_wasm_fun('simple.wat', 'meaning_of_life'))
-    print(call_wasm_fun('simple.wat', 'multiply', 2, 9))
-    print(call_wasm_fun('simple.wat', 'f_to_c', 32.0))
+    print('CALL OF 1 :',call_wasm_fun('test.wat', 'mystery', 1))
+    print('CALL OF 2 :',call_wasm_fun('test.wat', 'mystery', 2))
+    print('CALL OF 5 :',call_wasm_fun('test.wat', 'mystery', 5))
+    print('CALL OF 7 :',call_wasm_fun('test.wat', 'mystery', 7))
 
 
 if __name__ == '__main__':
