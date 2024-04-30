@@ -132,6 +132,19 @@ class CodeGenerationVisitor(PTNodeVisitor):
                 result += '    i32.lt_s\n'
             i += 2
         return result
+    
+    def visit_do_while(self, node, children):
+        return (
+            '    block\n'  # Outer block to enable exit from the loop
+            + '    loop\n'  # Loop start
+            + children[0]  # Execute the loop body first
+            + children[1]  # Condition expression
+            + '    i32.eqz\n'  # Check if the expression is zero (false)
+            + '    br_if 1\n'  # Break out of loop if condition is false
+            + '    br 0\n'  # Continue loop
+            + '    end\n'  # End loop
+            + '    end\n'  # End block
+        )
 
     def visit_decimal(self, node, children):
         return f'    i32.const { node.value }\n'
