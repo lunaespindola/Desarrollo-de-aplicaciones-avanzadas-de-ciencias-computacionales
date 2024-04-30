@@ -55,14 +55,6 @@ class SemanticVisitor(PTNodeVisitor):
                 'Out of range hexadecimal integer literal at position '
                 f'{self.position(node)} => { value }'
             )
-            
-    def visit_comparison(self, node, children):
-        left, op, right = children
-        if left != right:
-            raise SemanticMistake(
-                'Comparison between different types at position '
-                f'{self.position(node)}'
-            )
 
     def visit_decl_variable(self, node, children):
         name = node.value

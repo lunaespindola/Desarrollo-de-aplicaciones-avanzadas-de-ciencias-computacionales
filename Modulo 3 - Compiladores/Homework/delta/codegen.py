@@ -67,15 +67,25 @@ class CodeGenerationVisitor(PTNodeVisitor):
     def visit_expression(self, node, children):
         if len(children) == 1:
             return children[0]
-        result = [children[0]]
+
+        result = children[0]  # Evaluate the first expression
+
         for exp in children[1:]:
-            result.append('    if (result i32)\n')
-            result.append(exp)
-        result.append('    i32.eqz\n' * 2)
-        result.append('    else\n'
-                      '    i32.const 0\n'
-                      '    end\n' * (len(children) - 1))
-        return ''.join(result)
+            # Check if the previous expression's result was non-zero (true)
+            result += (
+                '    i32.const 0\n'  # Push 0 to the stack for comparison
+                + '    i32.ne\n'      # Check if not equal to 0 (i.e., true)
+                + '    if (result i32)\n'  # If true, evaluate the next expression
+                + exp
+                + '    i32.const 0\n'  # Push 0 to the stack for comparison in the next iteration
+                + '    i32.ne\n'      # Ensure the result is 0 or 1
+                + '    else\n'        # If the previous result was false, push 0 and continue
+                + '    i32.const 0\n'
+                + '    end\n'
+            )
+
+        return result
+
 
     def visit_additive(self, node, children):
         result = [children[0]]
@@ -100,6 +110,28 @@ class CodeGenerationVisitor(PTNodeVisitor):
                 case '%':
                     result.append('    i32.rem_s\n')
         return ''.join(result)
+    
+    def visit_comparison(self, node, children):
+        result = children[0]
+        i = 1
+        while i < len(children):
+            operator = children[i]
+            rhs = children[i + 1]
+            result += rhs
+            if operator == '==':
+                result += '    i32.eq\n'
+            elif operator == '!=':
+                result += '    i32.ne\n'
+            elif operator == '>=':
+                result += '    i32.ge_s\n'
+            elif operator == '>':
+                result += '    i32.gt_s\n'
+            elif operator == '<=':
+                result += '    i32.le_s\n'
+            elif operator == '<':
+                result += '    i32.lt_s\n'
+            i += 2
+        return result
 
     def visit_decimal(self, node, children):
         return f'    i32.const { node.value }\n'
@@ -120,20 +152,7 @@ class CodeGenerationVisitor(PTNodeVisitor):
     
     def visit_hexadecimal(self, node, children):
         node.value = int(node.value[2:], 16)
-        return f'    i32.const { node.value }\n'
-    
-    def visit_comparison(self, node, children):
-        left, op, right = children
-        result = (left
-                  + right
-                  + '    i32.eq\n' * (op == '==')
-                  + '    i32.ne\n' * (op == '!=')
-                  + '    i32.lt_s\n' * (op == '<')
-                  + '    i32.gt_s\n' * (op == '>')
-                  + '    i32.le_s\n' * (op == '<=')
-                  + '    i32.ge_s\n' * (op == '>=')
-                  )
-        return result
+        return f'    i32.const { node.value }\n'    
 
     def visit_parenthesis(self, node, children):
         return children[0]
