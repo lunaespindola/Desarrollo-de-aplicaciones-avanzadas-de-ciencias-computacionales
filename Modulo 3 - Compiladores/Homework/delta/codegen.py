@@ -1,5 +1,12 @@
-from arpeggio import PTNodeVisitor
+'''
+    @desciption: This module contains the CodeGenerationVisitor class, which is responsible for generating the WebAssembly code from the AST.
+    @author: @Lunaespindola
+    @date: 2024/04/30
+    A01751117
+'''
 
+# import the PTNodeVisitor class from the arpeggio library
+from arpeggio import PTNodeVisitor
 
 class CodeGenerationVisitor(PTNodeVisitor):
 

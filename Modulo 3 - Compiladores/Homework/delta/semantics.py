@@ -1,5 +1,12 @@
-from arpeggio import PTNodeVisitor
+'''
+    @desciption: This module contains the SemanticVisitor class and Semantic mistake class, which is responsible for the semantic analysis of the AST.
+    @author: @Lunaespindola
+    @date: 2024/04/30
+    A01751117
+'''
 
+# import the PTNodeVisitor class from the arpeggio module
+from arpeggio import PTNodeVisitor
 
 class SemanticMistake(Exception):
 
