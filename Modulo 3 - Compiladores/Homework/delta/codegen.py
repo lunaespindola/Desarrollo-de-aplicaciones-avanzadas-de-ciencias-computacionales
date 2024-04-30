@@ -68,24 +68,38 @@ class CodeGenerationVisitor(PTNodeVisitor):
         if len(children) == 1:
             return children[0]
 
-        result = children[0]  # Evaluate the first expression
+        result = children[0]  
 
         for exp in children[1:]:
-            # Check if the previous expression's result was non-zero (true)
             result += (
-                '    i32.const 0\n'  # Push 0 to the stack for comparison
-                + '    i32.ne\n'      # Check if not equal to 0 (i.e., true)
-                + '    if (result i32)\n'  # If true, evaluate the next expression
+                '    i32.const 0\n'  
+                + '    i32.ne\n'     
+                + '    if (result i32)\n' 
                 + exp
-                + '    i32.const 0\n'  # Push 0 to the stack for comparison in the next iteration
-                + '    i32.ne\n'      # Ensure the result is 0 or 1
-                + '    else\n'        # If the previous result was false, push 0 and continue
+                + '    i32.const 0\n'  
+                + '    i32.ne\n'      
+                + '    else\n'        
                 + '    i32.const 0\n'
                 + '    end\n'
             )
 
         return result
+    
+    def visit_logical_or(self, node, children):
+        if len(children) == 1:
+            return children[0]  
+        
+        result = ''
+        for i in range(len(children) - 1):
+            result += children[i]  
+            result += '\n    if (result i32)\n'  
+            result += '    i32.const 1\n'  
+            result += '    else\n'  
+        result += children[-1]  
+        for _ in range(len(children) - 1):
+            result += '\n    end\n'  
 
+        return result
 
     def visit_additive(self, node, children):
         result = [children[0]]

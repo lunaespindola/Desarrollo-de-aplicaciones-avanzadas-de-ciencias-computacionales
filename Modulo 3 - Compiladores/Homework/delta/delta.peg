@@ -11,7 +11,8 @@ while = 'while' expression block
 do_while = 'do' block 'while' expression ';'
 block = '{' statement* '}'
 lhs_variable = identifier
-expression = comparison ('&&' comparison)*
+expression = logical_or ('&&' logical_or)*
+logical_or  = comparison ('||' comparison)*
 comparison = additive (comparison_operator additive)*
 comparison_operator = '==' / '!=' / '>=' / '>' / '<=' / '<'
 additive = multiplicative (('+' / '-') multiplicative)*
