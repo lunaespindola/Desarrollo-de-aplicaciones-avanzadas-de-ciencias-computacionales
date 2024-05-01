@@ -1,68 +1,64 @@
 import os
 import re
-import nltk
-import tkinter as tk
-from tkinter import filedialog
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import pairwise
+import torch
+import matplotlib.pyplot as plt
+from transformers import BertTokenizer, BertModel
+from sklearn.metrics import pairwise, roc_auc_score
+from tkinter import filedialog, Tk
+import numpy as np
 
-# Ensure necessary nltk resources are downloaded
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('wordnet')
+# Load pre-trained BERT
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertModel.from_pretrained('bert-base-uncased')
 
 def read_file(file_path):
     """Reads a file and returns its content."""
     with open(file_path, 'r') as file:
         return file.read()
 
-def preprocess_text(text):
-    """Preprocesses the text by removing non-alphanumeric characters and lowercasing."""
-    text = re.sub(r'\W', ' ', text)
-    text = re.sub(r'\d', ' ', text)
-    text = re.sub(r'\s+', ' ', text, flags=re.I)
-    text = text.lower()
-    return text
+def bert_embed(text):
+    """Generate BERT embeddings for the given text."""
+    encoded_input = tokenizer(text, return_tensors='pt', max_length=512, truncation=True, padding='max_length')
+    with torch.no_grad():
+        output = model(**encoded_input)
+    return output.last_hidden_state[:,0,:].numpy()
 
-def tokenize_and_filter(text):
-    """Tokenizes the text and filters out stopwords."""
-    stop_words = set(nltk.corpus.stopwords.words('english'))
-    words = nltk.word_tokenize(text)
-    return [word for word in words if word not in stop_words]
-
-def stem_and_lemmatize(words):
-    """Applies stemming and lemmatization to a list of words."""
-    stemmer = nltk.stem.PorterStemmer()
-    lemmatizer = nltk.stem.WordNetLemmatizer()
-    return ' '.join([lemmatizer.lemmatize(stemmer.stem(word)) for word in words])
-
-def compute_similarity(text1, text2):
-    """Computes the cosine similarity between two pieces of text."""
-    vectorizer = TfidfVectorizer()
-    vectors = vectorizer.fit_transform([text1, text2])
-    return pairwise.cosine_similarity(vectors)[0, 1]
+def compute_similarity(embed1, embed2):
+    """Computes the cosine similarity between two embeddings."""
+    return pairwise.cosine_similarity(embed1, embed2)[0, 0]
 
 def check_plagiarism(file1, file2):
     """Checks plagiarism between two files."""
-    text1 = stem_and_lemmatize(tokenize_and_filter(preprocess_text(read_file(file1))))
-    text2 = stem_and_lemmatize(tokenize_and_filter(preprocess_text(read_file(file2))))
-    return compute_similarity(text1, text2)
+    text1 = read_file(file1)
+    text2 = read_file(file2)
+    embed1 = bert_embed(text1)
+    embed2 = bert_embed(text2)
+    return compute_similarity(embed1, embed2)
 
 def select_files(title="Select Files", filetypes=(("Text files", "*.txt"), ("All files", "*.*"))):
     """Allows user to select multiple files via a GUI dialog."""
-    root = tk.Tk()
+    root = Tk()
     root.withdraw()
     file_paths = filedialog.askopenfilenames(title=title, filetypes=filetypes)
     root.destroy()
     return file_paths
 
-def select_directory():
-    """Allows user to select a directory via a GUI dialog."""
-    root = tk.Tk()
-    root.withdraw()
-    directory = filedialog.askdirectory()
-    root.destroy()
-    return directory
+def plot_histogram(similarities):
+    """Plot a histogram of the similarity scores."""
+    plt.hist(similarities, bins=10, color='blue', alpha=0.7)
+    plt.title('Histogram of Similarity Scores')
+    plt.xlabel('Similarity Score')
+    plt.ylabel('Frequency')
+    plt.show()
+
+def write_results(file_path, results):
+    """Writes the plagiarism check results to a file."""
+    with open(file_path, 'w') as file:
+        for key, value in results.items():
+            if isinstance(key, tuple):
+                file.write(f'{key[0]} vs {key[1]}: {value:.2f}%\n')
+            else:
+                file.write(f'{key}: {value:.2f}%\n')
 
 def perform_plagiarism_checks():
     """Performs various types of plagiarism checks based on user input."""
@@ -72,44 +68,38 @@ def perform_plagiarism_checks():
     print("3: Multiple files to multiple files")
     print("4: Directory check")
     choice = input("Enter your choice (1-4): ")
+    results = {}
     
     if choice == '1':
-        file1 = select_files()[0]
-        file2 = select_files()[0]
-        similarity = check_plagiarism(file1, file2)
-        print(f'Similarity: {similarity:.2f}')
-        write_results('results.txt', {'One-to-One Similarity': similarity})
-    
+        files = select_files()
+        similarity = check_plagiarism(files[0], files[1])
+        results[(os.path.basename(files[0]), os.path.basename(files[1]))] = similarity
+
     elif choice == '2':
         file1 = select_files()[0]
         files = select_files()
-        similarities = {os.path.basename(f): check_plagiarism(file1, f) for f in files}
-        write_results('results.txt', similarities)
-    
+        for file in files:
+            similarity = check_plagiarism(file1, file)
+            results[(os.path.basename(file1), os.path.basename(file))] = similarity
+
     elif choice == '3':
         files1 = select_files()
         files2 = select_files()
-        similarities = {(os.path.basename(f1), os.path.basename(f2)): check_plagiarism(f1, f2) 
-                        for f1 in files1 for f2 in files2}
-        write_results('results.txt', similarities)
-    
-    elif choice == '4':
-        directory = select_directory()
-        files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.txt')]
-        similarities = {(os.path.basename(f1), os.path.basename(f2)): check_plagiarism(f1, f2) 
-                        for i, f1 in enumerate(files) for f2 in files[i + 1:]}
-        write_results('results.txt', similarities)
+        for f1 in files1:
+            for f2 in files2:
+                similarity = check_plagiarism(f1, f2)
+                results[(os.path.basename(f1), os.path.basename(f2))] = similarity
 
-def write_results(file_path, results):
-    """Writes the plagiarism check results to a file."""
-    with open(file_path, 'w') as file:
-        for key, value in results.items():
-            if isinstance(key, tuple):
-                value *= 100
-                file.write(f'{key[0]} vs {key[1]}: {value:.2f}% \n')
-            else:
-                value *= 100
-                file.write(f'{key}: {value:.2f}%\n')
+    elif choice == '4':
+        directory = filedialog.askdirectory()
+        files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.txt')]
+        for i, f1 in enumerate(files):
+            for f2 in files[i+1:]:
+                similarity = check_plagiarism(f1, f2)
+                results[(os.path.basename(f1), os.path.basename(f2))] = similarity
+
+    write_results('results.txt', results)
+    plot_histogram(list(results.values()))
 
 def main():
     """Main function to run the plagiarism checks."""
