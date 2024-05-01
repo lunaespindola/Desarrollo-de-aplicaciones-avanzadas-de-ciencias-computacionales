@@ -1,5 +1,12 @@
-from arpeggio import PTNodeVisitor
+'''
+    @desciption: This module contains the SemanticVisitor class and Semantic mistake class, which is responsible for the semantic analysis of the AST.
+    @author: @Lunaespindola
+    @date: 2024/04/30
+    A01751117
+'''
 
+# import the PTNodeVisitor class from the arpeggio module
+from arpeggio import PTNodeVisitor
 
 class SemanticMistake(Exception):
 
@@ -10,7 +17,7 @@ class SemanticMistake(Exception):
 class SemanticVisitor(PTNodeVisitor):
 
     RESERVED_WORDS = ['true', 'false', 'var',
-                      'if', 'else', 'while']
+                      'if', 'else', 'while', 'do']
 
     def __init__(self, parser, **kwargs):
         super().__init__(**kwargs)
@@ -29,6 +36,30 @@ class SemanticVisitor(PTNodeVisitor):
         if value >= 2 ** 31:
             raise SemanticMistake(
                 'Out of range decimal integer literal at position '
+                f'{self.position(node)} => { value }'
+            )
+            
+    def visit_binary(self, node, children):
+        value = int(node.value[2:], 2)
+        if value >= 2 ** 31:
+            raise SemanticMistake(
+                'Out of range binary integer literal at position '
+                f'{self.position(node)} => { value }'
+            )
+            
+    def visit_octal(self, node, children):
+        value = int(node.value[2:], 8)
+        if value >= 2 ** 31:
+            raise SemanticMistake(
+                'Out of range octal integer literal at position '
+                f'{self.position(node)} => { value }'
+            )
+            
+    def visit_hexadecimal(self, node, children):
+        value = int(node.value[2:], 16)
+        if value >= 2 ** 31:
+            raise SemanticMistake(
+                'Out of range hexadecimal integer literal at position '
                 f'{self.position(node)} => { value }'
             )
 
@@ -60,67 +91,4 @@ class SemanticVisitor(PTNodeVisitor):
             raise SemanticMistake(
                 'Undeclared variable reference at position '
                 f'{self.position(node)} => {name}'
-            )
-
-    def visit_binary(self, node, children):
-        value = int(node.value[2:], 2) 
-        if value >= 2 ** 31:
-            raise SemanticMistake(
-                f'Out of range binary integer literal at position {self.position(node)} => {value}'
-            )
-
-    def visit_octal(self, node, children):
-        value = int(node.value[2:], 8) 
-        if value >= 2 ** 31:
-            raise SemanticMistake(
-                f'Out of range octal integer literal at position {self.position(node)} => {value}'
-            )
-
-    def visit_hexadecimal(self, node, children):
-        value = int(node.value[2:], 16)  
-        if value >= 2 ** 31:
-            raise SemanticMistake(
-                f'Out of range hexadecimal integer literal at position {self.position(node)} => {value}'
-            )
-
-    def visit_equal(self, node, children):
-        left, right = children
-        if not isinstance(left, int) or not isinstance(right, int):
-            raise SemanticMistake(
-                f'Type mismatch in equal comparison at position {self.position(node)}'
-            )
-
-    def visit_not_equal(self, node, children):
-        left, right = children
-        if not isinstance(left, int) or not isinstance(right, int):
-            raise SemanticMistake(
-                f'Type mismatch in not equal comparison at position {self.position(node)}'
-            )
-
-    def visit_greater_equal(self, node, children):
-        left, right = children
-        if not isinstance(left, int) or not isinstance(right, int):
-            raise SemanticMistake(
-                f'Type mismatch in greater or equal comparison at position {self.position(node)}'
-            )
-
-    def visit_greater_than(self, node, children):
-        left, right = children
-        if not isinstance(left, int) or not isinstance(right, int):
-            raise SemanticMistake(
-                f'Type mismatch in greater than comparison at position {self.position(node)}'
-            )
-
-    def visit_less_equal(self, node, children):
-        left, right = children
-        if not isinstance(left, int) or not isinstance(right, int):
-            raise SemanticMistake(
-                f'Type mismatch in less or equal comparison at position {self.position(node)}'
-            )
-
-    def visit_less_than(self, node, children):
-        left, right = children
-        if not isinstance(left, int) or not isinstance(right, int):
-            raise SemanticMistake(
-                f'Type mismatch in less than comparison at position {self.position(node)}'
             )

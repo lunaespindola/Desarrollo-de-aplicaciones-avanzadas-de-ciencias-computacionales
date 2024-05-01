@@ -1,5 +1,12 @@
-from arpeggio import PTNodeVisitor
+'''
+    @desciption: This module contains the CodeGenerationVisitor class, which is responsible for generating the WebAssembly code from the AST.
+    @author: @Lunaespindola
+    @date: 2024/04/30
+    A01751117
+'''
 
+# import the PTNodeVisitor class from the arpeggio library
+from arpeggio import PTNodeVisitor
 
 class CodeGenerationVisitor(PTNodeVisitor):
 
@@ -37,12 +44,22 @@ class CodeGenerationVisitor(PTNodeVisitor):
 
     def visit_if(self, node, children):
         result = (children[0]
-                  + '    if\n'
-                  + children[1])
-        if len(children) == 3:
-            result += ('    else\n'
-                       + children[2])
-        result += '    end\n'
+                + '    if\n'
+                + children[1])
+        count_ends = 1
+        last_else = not(len(children) % 2 == 0)
+        until = len(children) + (-1 if last_else else 0)
+        if last_else:
+            result += '    else\n'
+        for i in range(2, until, 2):
+            result += (children[i]
+                    + '    if\n'
+                    + children[i+1]
+                    +'    else\n')
+            count_ends += 1
+        if last_else:
+            result += children[-1]
+        result += '    end\n' * count_ends
         return result
 
     def visit_while(self, node, children):
@@ -63,19 +80,54 @@ class CodeGenerationVisitor(PTNodeVisitor):
     def visit_lhs_variable(self, node, children):
         name = node.value
         return f'    local.set ${name}\n'
-    
+
     def visit_expression(self, node, children):
+        if len(children) == 1:
+            return children[0]
+
+        result = children[0]  
+
+        for exp in children[1:]:
+            result += (
+                '    i32.const 0\n'  
+                + '    i32.ne\n'     
+                + '    if (result i32)\n' 
+                + exp
+                + '    i32.const 0\n'  
+                + '    i32.ne\n'      
+                + '    else\n'        
+                + '    i32.const 0\n'
+                + '    end\n'
+            )
+
+        return result
+    
+    def visit_logical_or(self, node, children):
+        if len(children) == 1:
+            return children[0]  
+        
+        result = ''
+        for i in range(len(children) - 1):
+            result += children[i]  
+            result += '\n    if (result i32)\n'  
+            result += '    i32.const 1\n'  
+            result += '    else\n'  
+        result += children[-1]  
+        for _ in range(len(children) - 1):
+            result += '\n    end\n'  
+
+        return result
+
+    def visit_additive(self, node, children):
         result = [children[0]]
         for i in range(1, len(children), 2):
-            if children[i] in {'+', '-', '*', '/', '%'}:
-                result.append(f' {children[i]} ')  # Add spaces around the operator
-            else:
-                result.append(' ')  # Add space before non-operator elements
-                result.append(children[i])  # Operand
-                result.append(' ')  # Add space after non-operator elements
+            result.append(children[i + 1])
+            match children[i]:
+                case '+':
+                    result.append('    i32.add\n')
+                case '-':
+                    result.append('    i32.sub\n')
         return ''.join(result)
-
-
 
     def visit_multiplicative(self, node, children):
         result = [children[0]]
@@ -89,6 +141,41 @@ class CodeGenerationVisitor(PTNodeVisitor):
                 case '%':
                     result.append('    i32.rem_s\n')
         return ''.join(result)
+    
+    def visit_comparison(self, node, children):
+        result = children[0]
+        i = 1
+        while i < len(children):
+            operator = children[i]
+            rhs = children[i + 1]
+            result += rhs
+            if operator == '==':
+                result += '    i32.eq\n'
+            elif operator == '!=':
+                result += '    i32.ne\n'
+            elif operator == '>=':
+                result += '    i32.ge_s\n'
+            elif operator == '>':
+                result += '    i32.gt_s\n'
+            elif operator == '<=':
+                result += '    i32.le_s\n'
+            elif operator == '<':
+                result += '    i32.lt_s\n'
+            i += 2
+        return result
+    
+    def visit_do_while(self, node, children):
+        return (
+            '    block\n'  
+            + '    loop\n' 
+            + children[0]  
+            + children[1]  
+            + '    i32.eqz\n'  
+            + '    br_if 1\n'  
+            + '    br 0\n'  
+            + '    end\n'  
+            + '    end\n'  
+        )
 
     def visit_decimal(self, node, children):
         return f'    i32.const { node.value }\n'
@@ -98,6 +185,18 @@ class CodeGenerationVisitor(PTNodeVisitor):
             return '    i32.const 1\n'
         else:
             return '    i32.const 0\n'
+    
+    def visit_binary(self, node, children):
+        node.value = int(node.value[2:], 2)
+        return f'    i32.const {node.value}\n'
+
+    def visit_octal(self, node, children):
+        node.value = int(node.value[2:], 8)
+        return f'    i32.const { node.value }\n'
+    
+    def visit_hexadecimal(self, node, children):
+        node.value = int(node.value[2:], 16)
+        return f'    i32.const { node.value }\n'    
 
     def visit_parenthesis(self, node, children):
         return children[0]
@@ -121,33 +220,3 @@ class CodeGenerationVisitor(PTNodeVisitor):
     def visit_rhs_variable(self, node, children):
         name = node.value
         return f'    local.get ${name}\n'
-
-    def visit_decimal(self, node, children):
-        return f'i32.const {node.value}'
-
-    def visit_binary(self, node, children):
-        return f'i32.const {int(node.value[2:], 2)}'
-
-    def visit_octal(self, node, children):
-        return f'i32.const {int(node.value[2:], 8)}'
-
-    def visit_hexadecimal(self, node, children):
-        return f'i32.const {int(node.value[2:], 16)}'
-
-    def visit_equal(self, node, children):
-        return '    i32.eq\n'
-
-    def visit_not_equal(self, node, children):
-        return '    i32.ne\n'
-
-    def visit_greater_equal(self, node, children):
-        return '    i32.ge_s\n'
-
-    def visit_greater_than(self, node, children):
-        return '    i32.gt_s\n'
-
-    def visit_less_equal(self, node, children):
-        return '    i32.le_s\n'
-
-    def visit_less_than(self, node, children):
-        return '    i32.lt_s\n'
