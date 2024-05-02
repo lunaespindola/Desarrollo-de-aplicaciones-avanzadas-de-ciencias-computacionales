@@ -1,55 +1,110 @@
-FID-01.txt vs FID-02.txt: 2.14% 
-FID-01.txt vs FID-03.txt: 10.39% 
-FID-01.txt vs FID-04.txt: 2.98% 
-FID-01.txt vs FID-05.txt: 7.43% 
-FID-01.txt vs FID-06.txt: 1.10% 
-FID-01.txt vs FID-07.txt: 3.13% 
-FID-01.txt vs FID-08.txt: 11.18% 
-FID-01.txt vs FID-09.txt: 2.33% 
-FID-01.txt vs FID-10.txt: 4.58% 
-FID-01.txt vs SCRAMBLED-01.txt: 100.00% 
-FID-02.txt vs FID-03.txt: 6.25% 
-FID-02.txt vs FID-04.txt: 3.08% 
-FID-02.txt vs FID-05.txt: 1.64% 
-FID-02.txt vs FID-06.txt: 6.36% 
-FID-02.txt vs FID-07.txt: 5.28% 
-FID-02.txt vs FID-08.txt: 4.35% 
-FID-02.txt vs FID-09.txt: 13.47% 
-FID-02.txt vs FID-10.txt: 6.76% 
-FID-02.txt vs SCRAMBLED-01.txt: 2.14% 
-FID-03.txt vs FID-04.txt: 9.16% 
-FID-03.txt vs FID-05.txt: 7.76% 
-FID-03.txt vs FID-06.txt: 5.52% 
-FID-03.txt vs FID-07.txt: 11.01% 
-FID-03.txt vs FID-08.txt: 13.24% 
-FID-03.txt vs FID-09.txt: 8.30% 
-FID-03.txt vs FID-10.txt: 17.48% 
-FID-03.txt vs SCRAMBLED-01.txt: 10.39% 
-FID-04.txt vs FID-05.txt: 2.93% 
-FID-04.txt vs FID-06.txt: 14.66% 
-FID-04.txt vs FID-07.txt: 15.53% 
-FID-04.txt vs FID-08.txt: 6.46% 
-FID-04.txt vs FID-09.txt: 2.13% 
-FID-04.txt vs FID-10.txt: 4.32% 
-FID-04.txt vs SCRAMBLED-01.txt: 2.98% 
-FID-05.txt vs FID-06.txt: 3.37% 
-FID-05.txt vs FID-07.txt: 2.17% 
-FID-05.txt vs FID-08.txt: 7.77% 
-FID-05.txt vs FID-09.txt: 8.12% 
-FID-05.txt vs FID-10.txt: 6.89% 
-FID-05.txt vs SCRAMBLED-01.txt: 7.43% 
-FID-06.txt vs FID-07.txt: 14.73% 
-FID-06.txt vs FID-08.txt: 5.06% 
-FID-06.txt vs FID-09.txt: 2.73% 
-FID-06.txt vs FID-10.txt: 4.67% 
-FID-06.txt vs SCRAMBLED-01.txt: 1.10% 
-FID-07.txt vs FID-08.txt: 6.38% 
-FID-07.txt vs FID-09.txt: 8.36% 
-FID-07.txt vs FID-10.txt: 16.52% 
-FID-07.txt vs SCRAMBLED-01.txt: 3.13% 
-FID-08.txt vs FID-09.txt: 4.64% 
-FID-08.txt vs FID-10.txt: 8.36% 
-FID-08.txt vs SCRAMBLED-01.txt: 11.18% 
-FID-09.txt vs FID-10.txt: 9.98% 
-FID-09.txt vs SCRAMBLED-01.txt: 2.33% 
-FID-10.txt vs SCRAMBLED-01.txt: 4.58% 
+File1: FID-01.txt, File2: FID-02.txt - Similarity: 1.71%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-03.txt - Similarity: 9.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-04.txt - Similarity: 2.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-05.txt - Similarity: 7.51%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-06.txt - Similarity: 1.57%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-07.txt - Similarity: 3.30%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-08.txt - Similarity: 10.66%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-09.txt - Similarity: 1.00%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: FID-10.txt - Similarity: 3.19%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-01.txt, File2: SCRAMBLED-01.txt - Similarity: 100.00%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-01.txt - Similarity: 1.71%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-03.txt - Similarity: 5.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-04.txt - Similarity: 3.17%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-05.txt - Similarity: 1.69%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-06.txt - Similarity: 5.05%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-07.txt - Similarity: 4.65%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-08.txt - Similarity: 4.30%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-09.txt - Similarity: 14.06%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: FID-10.txt - Similarity: 6.66%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-02.txt, File2: SCRAMBLED-01.txt - Similarity: 1.71%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-01.txt - Similarity: 9.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-02.txt - Similarity: 5.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-04.txt - Similarity: 9.46%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-05.txt - Similarity: 7.85%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-06.txt - Similarity: 5.12%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-07.txt - Similarity: 7.77%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-08.txt - Similarity: 12.55%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-09.txt - Similarity: 8.08%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: FID-10.txt - Similarity: 16.77%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-03.txt, File2: SCRAMBLED-01.txt - Similarity: 9.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-01.txt - Similarity: 2.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-02.txt - Similarity: 3.17%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-03.txt - Similarity: 9.46%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-05.txt - Similarity: 2.75%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-06.txt - Similarity: 14.75%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-07.txt - Similarity: 17.14%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-08.txt - Similarity: 5.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-09.txt - Similarity: 1.89%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: FID-10.txt - Similarity: 3.61%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-04.txt, File2: SCRAMBLED-01.txt - Similarity: 2.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-01.txt - Similarity: 7.51%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-02.txt - Similarity: 1.69%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-03.txt - Similarity: 7.85%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-04.txt - Similarity: 2.75%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-06.txt - Similarity: 3.86%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-07.txt - Similarity: 2.46%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-08.txt - Similarity: 7.87%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-09.txt - Similarity: 6.26%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: FID-10.txt - Similarity: 6.85%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-05.txt, File2: SCRAMBLED-01.txt - Similarity: 7.51%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-01.txt - Similarity: 1.57%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-02.txt - Similarity: 5.05%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-03.txt - Similarity: 5.12%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-04.txt - Similarity: 14.75%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-05.txt - Similarity: 3.86%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-07.txt - Similarity: 12.31%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-08.txt - Similarity: 5.81%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-09.txt - Similarity: 3.10%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: FID-10.txt - Similarity: 5.40%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-06.txt, File2: SCRAMBLED-01.txt - Similarity: 1.57%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-01.txt - Similarity: 3.30%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-02.txt - Similarity: 4.65%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-03.txt - Similarity: 7.77%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-04.txt - Similarity: 17.14%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-05.txt - Similarity: 2.46%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-06.txt - Similarity: 12.31%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-08.txt - Similarity: 7.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-09.txt - Similarity: 8.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: FID-10.txt - Similarity: 13.72%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-07.txt, File2: SCRAMBLED-01.txt - Similarity: 3.30%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-01.txt - Similarity: 10.66%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-02.txt - Similarity: 4.30%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-03.txt - Similarity: 12.55%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-04.txt - Similarity: 5.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-05.txt - Similarity: 7.87%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-06.txt - Similarity: 5.81%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-07.txt - Similarity: 7.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-09.txt - Similarity: 4.01%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: FID-10.txt - Similarity: 7.97%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-08.txt, File2: SCRAMBLED-01.txt - Similarity: 10.66%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-01.txt - Similarity: 1.00%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-02.txt - Similarity: 14.06%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-03.txt - Similarity: 8.08%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-04.txt - Similarity: 1.89%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-05.txt - Similarity: 6.26%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-06.txt - Similarity: 3.10%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-07.txt - Similarity: 8.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-08.txt - Similarity: 4.01%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: FID-10.txt - Similarity: 9.77%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-09.txt, File2: SCRAMBLED-01.txt - Similarity: 1.00%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-01.txt - Similarity: 3.19%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-02.txt - Similarity: 6.66%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-03.txt - Similarity: 16.77%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-04.txt - Similarity: 3.61%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-05.txt - Similarity: 6.85%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-06.txt - Similarity: 5.40%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-07.txt - Similarity: 13.72%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-08.txt - Similarity: 7.97%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: FID-09.txt - Similarity: 9.77%, Category: High - Might be whole phrases copied or only minor rewording
+File1: FID-10.txt, File2: SCRAMBLED-01.txt - Similarity: 3.19%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-01.txt - Similarity: 100.00%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-02.txt - Similarity: 1.71%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-03.txt - Similarity: 9.15%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-04.txt - Similarity: 2.79%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-05.txt - Similarity: 7.51%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-06.txt - Similarity: 1.57%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-07.txt - Similarity: 3.30%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-08.txt - Similarity: 10.66%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-09.txt - Similarity: 1.00%, Category: High - Might be whole phrases copied or only minor rewording
+File1: SCRAMBLED-01.txt, File2: FID-10.txt - Similarity: 3.19%, Category: High - Might be whole phrases copied or only minor rewording
