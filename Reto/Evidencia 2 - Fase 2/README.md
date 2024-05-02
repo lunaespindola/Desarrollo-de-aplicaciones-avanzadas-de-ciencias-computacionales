@@ -1,6 +1,6 @@
 # Evidence 2: Similarity Analysis Using Artificial Intelligence
 ### Reflection on the Advantages/Disadvantages of the Enhanced Model
-Code for plagiarism detection using advanced AI methods, with tests and various selection modes.
+Code for plagiarism detection using advanced AI methods and various selection modes.
 
 ## Deployment
 
@@ -9,15 +9,6 @@ To deploy this project, run:
 ```bash
   python main.py
 ```
-
-## Test Deployment
-
-To deploy the test, use:
-
-```bash
-    python -m unittest tests.foo
-```
-Change 'foo' to the name of the test.
 
 ## Instaling dependencies
 Install the necessary dependencies with:
