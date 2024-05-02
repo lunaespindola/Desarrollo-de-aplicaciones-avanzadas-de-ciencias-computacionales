@@ -379,7 +379,13 @@ def user_interface():
     print("2. Compare one file to multiple files")
     print("3. Compare multiple files to multiple files")
     print("4. Compare all files in a directory")
-    choice = int(input("Enter your choice (1-4): "))
+    try:
+        choice = int(input("Enter your choice (1-4): "))
+        if choice not in [1, 2, 3, 4]:
+            raise ValueError
+    except ValueError:
+        print("Invalid choice. Please select 1-4.")
+        return
     results = []
     similarity_scores_tfidf = []
     similarity_scores_semantic = []
@@ -436,7 +442,7 @@ def user_interface():
         plot_confusion_matrix(y_true, y_pred)
         plot_roc_curve(y_true, y_pred)
         
-    if choice == 3 or choice == 4 or choice == 2:
+    if choice == 3 or choice == 4:
         save_results_to_csv(results, './Results/results.csv')
         save_results_to_md(results, './Results/results.md')
         convert_to_pdf('./Results/results.md', './Results/results.pdf')
