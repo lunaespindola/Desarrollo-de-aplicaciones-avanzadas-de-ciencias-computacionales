@@ -1,0 +1,1 @@
+Files: FID-01.txt, FID-01.txt - TF-IDF Similarity: 1.00, Semantic Similarity: 1.00, Tense Change: False, Voice Change: False
