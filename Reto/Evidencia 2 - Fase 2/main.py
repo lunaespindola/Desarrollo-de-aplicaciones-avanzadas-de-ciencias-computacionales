@@ -17,6 +17,7 @@ import tkinter as tk
 from tkinter import filedialog
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import confusion_matrix, roc_curve, auc
+from sklearn.metrics import roc_auc_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -70,9 +71,15 @@ def read_and_preprocess(filepath):
         @args: filepath (str): The path to the file to be read
         @returns: str: The preprocessed text content of the file
     '''
-    with open(filepath, 'r', encoding='utf-8') as file:
-        content = file.read()
+    try:
+        with open(filepath, 'r', encoding='utf-8') as file:
+            content = file.read()
+    except UnicodeDecodeError:
+        # Try a different encoding if UTF-8 fails
+        with open(filepath, 'r', encoding='iso-8859-1') as file:
+            content = file.read()
     return preprocess(content)
+
 
 #----------------- Text comparison functions -----------------#
 def calculate_similarity(doc1, doc2):
@@ -142,6 +149,59 @@ def categorize_plagiarism(similarity):
         return 0.5  # 'Medium - Likely paraphrasing or summarizing'
     else:
         return 0  # 'Low'
+    
+#----------------- Computing the AUC, TPR AND FPR -----------------#
+def calculate_auc(y_true, y_scores):
+    '''
+        Computes the Area Under the Curve (AUC) for the ROC curve using true labels and score values.
+        @args:
+            y_true (list): A list of true labels (0 or 1)
+            y_scores (list): A list of scores or probabilities
+        @returns:
+            float: The AUC score
+    '''
+    return roc_auc_score(y_true, y_scores)
+
+def compute_tpr(tp, fn):
+    '''
+        Computes the True Positive Rate (TPR) for the ROC curve.
+        @args: y_true (list): A list of true labels
+               y_pred (list): A list of predicted labels
+        @returns: float: The TPR score
+    '''
+    tpr = (tp)/(tp+fn)
+    return tpr
+
+def compute_fpr(fp, tn):
+    '''
+        Computes the False Positive Rate (FPR) for the ROC curve.
+        @args: y_true (list): A list of true labels
+               y_pred (list): A list of predicted labels
+        @returns: float: The FPR score
+    '''
+    fpr = (fp)/(fp+tn)
+    return fpr
+
+def compute_tp_fp_tn_fn(y_true, y_pred):
+    '''
+        Computes the True Positives, False Positives, True Negatives, and False Negatives.
+        @args:
+            y_true (list): A list of true binary labels
+            y_pred (list): A list of predicted binary labels
+        @returns:
+            tuple: A tuple containing the counts of TP, FP, TN, FN
+    '''
+    TP = sum((yt == 1 and yp == 1) for yt, yp in zip(y_true, y_pred))
+    FP = sum((yt == 0 and yp == 1) for yt, yp in zip(y_true, y_pred))
+    TN = sum((yt == 0 and yp == 0) for yt, yp in zip(y_true, y_pred))
+    FN = sum((yt == 1 and yp == 0) for yt, yp in zip(y_true, y_pred))
+    return TP, FP, TN, FN
+    
+
+#----------------- Calculating the y_pred -----------------#
+def calculate_y_true_and_y_pred(similarity_scores_tfidf, threshold=0.8):
+    y_pred = [1 if score > threshold else 0 for score in similarity_scores_tfidf]
+    return y_pred
 
 #----------------- File I/O and reporting function -----------------#
 def write_results_to_file(filepath, results):
@@ -334,19 +394,17 @@ def plot_similarity_scores(similarity_scores_tfidf, similarity_scores_semantic):
     plt.show()
     
 def plot_confusion_matrix(y_true, y_pred):
-    '''
-        Plots the confusion matrix for the plagiarism detection results.
-        @args: y_true (list): A list of true labels
-                y_pred (list): A list of predicted labels
-        @returns: None
-    '''
+    if len(set(y_true)) < 2:
+        print("Not enough classes in y_true to plot a confusion matrix.")
+        return
     cm = confusion_matrix(y_true, y_pred)
-    plt.figure(figsize=(5, 5))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Low', 'Medium', 'High'], yticklabels=['Low', 'Medium', 'High'])
     plt.xlabel('Predicted')
-    plt.ylabel('Actual')
+    plt.ylabel('True')
     plt.title('Confusion Matrix')
     plt.show()
+
+
     
 def plot_roc_curve(y_true, y_pred):
     '''
@@ -434,13 +492,44 @@ def user_interface():
 
     write_results_to_file('./Results/results.txt', results)
     generate_summary_report(results)
+
+    # Calculate the true positive rate and false positive rate
+    y_pred = calculate_y_true_and_y_pred(similarity_scores_tfidf)
+    y_true = y_pred.copy()
+    total_plagiarism = 10 #total of plagiarism cases in the dataset (10 out of 110)
     
-    if similarity_scores_tfidf and similarity_scores_semantic:
-        plot_similarity_scores(similarity_scores_tfidf, similarity_scores_semantic)
-        y_true = [categorize_plagiarism(score) for score in similarity_scores_tfidf]
-        y_pred = [categorize_plagiarism(score) for score in similarity_scores_semantic]
-        plot_confusion_matrix(y_true, y_pred)
-        plot_roc_curve(y_true, y_pred)
+    # Fill the y_true list with the true labels
+    for i in range(len(y_true)):
+        if i < total_plagiarism:
+            y_true[i] = 1
+        else:
+            y_true[i] = 0
+            
+    # Compute the true positives, false positives, true negatives, and false negatives
+    TP, FP, TN, FN = compute_tp_fp_tn_fn(y_true, y_pred)
+    
+    # Compute the true positive rate and false positive rate
+    tpr = compute_tpr(TP, FN)
+    fpr = compute_fpr(FP, TN)
+    
+    # Compute the AUC score
+    auc_score = calculate_auc(y_true, similarity_scores_tfidf)
+    
+    # Plot the similarity scores, confusion matrix, and ROC curve
+    plot_similarity_scores(similarity_scores_tfidf, similarity_scores_semantic)
+    plot_confusion_matrix(y_true, y_pred)
+    plot_roc_curve(y_true, y_pred)
+    
+    # Print the true positive rate, false positive rate, and AUC
+    print(f"True Positive Rate: {tpr}")
+    print(f"False Positive Rate: {fpr}")
+    print(f"AUC: {auc_score}")
+    
+    # Write the true positive rate, false positive rate, and AUC to a file
+    with open('./Results/metrics.txt', 'w') as f:
+        f.write(f"True Positive Rate: {tpr}\n")
+        f.write(f"False Positive Rate: {fpr}\n")
+        f.write(f"AUC: {auc_score}\n")
         
     if choice == 3 or choice == 4:
         save_results_to_csv(results, './Results/results.csv')

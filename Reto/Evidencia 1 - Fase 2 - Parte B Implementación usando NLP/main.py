@@ -38,7 +38,7 @@ def read_files(file_path):
     Returns:
         str: The content of the file
     '''
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
     return content
 

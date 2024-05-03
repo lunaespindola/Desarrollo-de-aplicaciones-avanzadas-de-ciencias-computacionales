@@ -1,0 +1,3 @@
+True Positive Rate: 0.0
+False Positive Rate: 0.0044943820224719105
+AUC: 0.17561797752808989
