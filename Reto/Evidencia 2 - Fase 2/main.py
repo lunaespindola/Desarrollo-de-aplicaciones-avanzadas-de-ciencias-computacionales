@@ -25,6 +25,7 @@ from nltk.stem import PorterStemmer
 import pypandoc
 import sys
 import subprocess
+from functools import lru_cache
 
 # Download NLTK resources
 nltk.download('punkt')
@@ -82,6 +83,7 @@ def read_and_preprocess(filepath):
 
 
 #----------------- Text comparison functions -----------------#
+@lru_cache(maxsize=128)
 def calculate_similarity(doc1, doc2):
     '''
         Calculates the cosine similarity between two documents using TF-IDF vectors.
@@ -92,6 +94,7 @@ def calculate_similarity(doc1, doc2):
     docs = vectorizer.fit_transform([doc1, doc2])
     return cosine_similarity(docs[0:1], docs[1:2])[0][0]
 
+@lru_cache(maxsize=128)
 def calculate_semantic_similarity(doc1, doc2):
     '''
         Calculates the semantic similarity between two documents using spaCy's pre-trained word vectors.
@@ -104,6 +107,7 @@ def calculate_semantic_similarity(doc1, doc2):
     return doc1.similarity(doc2)
 
 #----------------- Plagiarism detection functions -----------------#
+@lru_cache(maxsize=128)
 def analyze_tense_and_voice(doc):
     '''
         Analyzes the tense and voice of verbs in a given document.
@@ -124,6 +128,7 @@ def analyze_tense_and_voice(doc):
     
     return tenses, voices
 
+@lru_cache(maxsize=128)
 def compare_tense_and_voice(doc1, doc2):
     '''
         Compares the tense and voice of two documents.

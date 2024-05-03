@@ -1,6 +1,6 @@
 Summary of Comparisons:
-Total Comparisons: 900
-Average TF-IDF Similarity: 6.88%
-Average Semantic Similarity: 87.13%
-Tense Changes Detected: 270 (30.00% of cases)
-Voice Changes Detected: 58 (6.44% of cases)
+Total Comparisons: 3300
+Average TF-IDF Similarity: 6.23%
+Average Semantic Similarity: 87.68%
+Tense Changes Detected: 1092 (33.09% of cases)
+Voice Changes Detected: 166 (5.03% of cases)
